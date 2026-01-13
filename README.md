@@ -4,7 +4,7 @@ A local-first autonomous AI agent that manages personal and business affairs 24/
 
 ## Overview
 
-Building a "Digital FTE" (Full-Time Equivalent) — an AI employee that proactively handles e-commerce business operations including order processing, customer communication, social media posting, and weekly business reporting.
+Building a "Digital FTE" (Full-Time Equivalent) — an AI employee that proactively runs **FTE Shop**, an online store selling AI agents and automation solutions.
 
 ## Tech Stack
 
@@ -31,14 +31,14 @@ External Sources (Gmail, WhatsApp, Website Orders)
    MCP Servers (External Actions)
 ```
 
-## Target: Silver+ Tier
+## Roadmap
 
 ### Phase 1: Setup & Infrastructure
 
 - [x] Repository setup
-- [x] Mock e-commerce business concept defined
-- [x] Business accounts setup (Gmail, LinkedIn, X)
-- [x] Obsidian vault structure (folders, Dashboard.md, Company_Handbook.md, Business_Goals.md)
+- [x] Mock e-commerce business concept defined (FTE Shop — selling AI agents)
+- [x] Business accounts setup (Gmail, LinkedIn, X, WhatsApp)
+- [x] Obsidian vault setup (folders + Dashboard.md, Company_Handbook.md, Business_Goals.md)
 
 ### Phase 2: Claude Code Integration
 
@@ -98,31 +98,42 @@ External Sources (Gmail, WhatsApp, Website Orders)
 - [ ] Architecture documentation
 - [ ] Lessons learned
 
-## Mock Business
+## FTE Shop — Mock Business
 
-E-commerce storefront for testing the complete order-to-fulfillment pipeline:
+**What we sell:** AI Agents & Automation Solutions
 
-1. Customer places order on website
-2. WhatsApp/Email notification triggers watcher
-3. Agent confirms order, updates inventory
-4. Posts business updates to LinkedIn/X
-5. Logs transaction for weekly CEO briefing
+|Product|Price Range|
+|---|---|
+|Gmail Assistant Agent|$99 - $299|
+|Social Media Manager Agent|$149 - $399|
+|Customer Support Agent|$199 - $499|
+|Data Entry Agent|$79 - $199|
+|Research Agent|$129 - $349|
+|Custom Agent|$500+|
+
+**Sales Pipeline:**
+
+1. Customer inquiry via WhatsApp/Email/Website
+2. AI Employee auto-responds with product info
+3. Order placed → Payment confirmed
+4. Delivery via email (setup docs)
+5. Follow-up for feedback
 
 ## Progress Log
 
 ### Day 0 — Setup (Jan 12, 2026)
 
 - Created repository
-- Defined mock e-commerce business concept
+- Defined FTE Shop business concept (AI agent store)
 - Set up business accounts (Gmail, LinkedIn, X, WhatsApp)
 - Installed Obsidian
-- Created initial vault structure
+- Created vault structure (folders + core files)
 
 ### Day 1 — Foundation (Jan 13, 2026)
 
 - _Coming soon_
 
-### Day 2 — Automation & Polish (Jan 14, 2026)
+### Day 2 — Automation (Jan 14, 2026)
 
 - _Coming soon_
 
