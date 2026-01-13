@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
+                "file": "Needs_Action/EMAIL_Order - Gmail Assistant_19bb858d.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "README"
+              "title": "EMAIL_Order - Gmail Assistant_19bb858d"
             }
           }
         ]
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "README.md",
+                "file": "Needs_Action/EMAIL_Order - Gmail Assistant_19bb858d.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for README"
+              "title": "Backlinks for EMAIL_Order - Gmail Assistant_19bb858d"
             }
           },
           {
@@ -113,12 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "README.md",
+                "file": "Needs_Action/EMAIL_Order - Gmail Assistant_19bb858d.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from README"
+              "title": "Outgoing links from EMAIL_Order - Gmail Assistant_19bb858d"
             }
           },
           {
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README.md",
+                "file": "Needs_Action/EMAIL_Order - Gmail Assistant_19bb858d.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of README"
+              "title": "Outline of EMAIL_Order - Gmail Assistant_19bb858d"
             }
           }
         ]
@@ -185,20 +185,25 @@
   },
   "active": "4aa902e244d35092",
   "lastOpenFiles": [
-    "CLAUDE.md",
+    "Needs_Action/FILE_demo_inquiry_2026-01-13T21-32-17.546009.md",
+    "Needs_Action/EMAIL_Order - Gmail Assistant_19bb858d.md",
+    "watchers/token.json",
+    "watchers/gmail_watcher.py",
+    "watchers/credentials.json",
+    "Inbox/demo_inquiry.txt.sb-03c5472a-38kuv6",
     "README.md",
+    "Inbox/demo_inquiry.txt",
+    "demo_inquiry.txt",
+    "AI_Employee_Vault/Needs_Action",
+    "AI_Employee_Vault/Inbox",
+    "AI_Employee_Vault",
+    "AI_Employee_Vault/Needs_Action/FILE_demo_inquiry_2026-01-13T21-22-29.756778.md",
+    "AI_Employee_Vault/Inbox/demo_inquiry.txt",
+    "CLAUDE.md",
     "Dashboard.md",
     "Business_Goals.md",
     "Company_Handbook.md",
     "Needs_Action.md",
-    "Rejected",
-    "Approved",
-    "Pending_Approval",
-    "Logs",
-    "Done",
-    "Plans",
-    "Needs_Action",
-    "Inbox",
     "README.md.md",
     "Welcome.md"
   ]
