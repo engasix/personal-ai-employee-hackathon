@@ -1,0 +1,99 @@
+2026-01-14 20:13:38,697 - Orchestrator - ERROR - Failed to load state: Expecting value: line 1 column 1 (char 0)
+2026-01-14 20:13:38,697 - Orchestrator - INFO - Watching directory: /Users/masif/Desktop/AgenticAI/FTE_SHOP/AI_Employee_Vault/Needs_Action
+2026-01-14 20:13:38,698 - Orchestrator - INFO - ============================================================
+2026-01-14 20:13:38,698 - Orchestrator - INFO - AI EMPLOYEE ORCHESTRATOR STARTING
+2026-01-14 20:13:38,698 - Orchestrator - INFO - ============================================================
+2026-01-14 20:13:38,698 - Orchestrator - INFO - Vault path: /Users/masif/Desktop/AgenticAI/FTE_SHOP/AI_Employee_Vault
+2026-01-14 20:13:38,698 - Orchestrator - INFO - Watching: /Users/masif/Desktop/AgenticAI/FTE_SHOP/AI_Employee_Vault/Needs_Action
+2026-01-14 20:13:38,698 - Orchestrator - INFO - Dry run mode: False
+2026-01-14 20:13:38,698 - Orchestrator - INFO - Debug mode: False
+2026-01-14 20:13:38,698 - Orchestrator - INFO - Max concurrent tasks: 3
+2026-01-14 20:13:38,698 - Orchestrator - INFO - Check interval: 30s
+2026-01-14 20:13:38,699 - Orchestrator - INFO - ✓ File watcher started successfully
+2026-01-14 20:13:38,699 - Orchestrator - INFO - ✓ Monitoring for new .md files in: Needs_Action/
+2026-01-14 20:13:38,699 - Orchestrator - INFO - No existing task files found in Needs_Action/
+2026-01-14 20:13:38,699 - Orchestrator - INFO - ============================================================
+2026-01-14 20:13:38,699 - Orchestrator - INFO - Orchestrator is now running. Press Ctrl+C to stop.
+2026-01-14 20:13:38,699 - Orchestrator - INFO - ============================================================
+2026-01-14 20:13:38,699 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:14:08,705 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:14:38,710 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:15:08,715 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:15:24,156 - Orchestrator - INFO - ✓ New task file detected: EMAIL_My Order - Coding Agent  1003_19bbd12d.md
+2026-01-14 20:15:24,660 - Orchestrator - INFO - Added task: EMAIL_My Order - Coding Agent  1003_19bbd12d (email)
+2026-01-14 20:15:24,661 - Orchestrator - INFO - Processing tasks: 1 pending, 0 active
+2026-01-14 20:15:24,662 - Orchestrator - ERROR - Error processing task EMAIL_My Order - Coding Agent  1003_19bbd12d: '/Users/masif/Desktop/AgenticAI/FTE_SHOP/AI_Employee_Vault/Needs_Action/EMAIL_My Order - Coding Agent  1003_19bbd12d.md' is not in the subpath of 'AI_Employee_Vault'
+2026-01-14 20:15:38,722 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:16:08,729 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:16:38,732 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:17:08,738 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:17:38,745 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:18:08,752 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:18:38,757 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:19:08,760 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:19:38,765 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:20:08,771 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:20:38,777 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:21:08,786 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:21:38,802 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:22:08,813 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:22:38,820 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:23:08,826 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:23:38,830 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:24:08,837 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:24:38,843 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:24:40,242 - Orchestrator - INFO - 
+Received shutdown signal (Ctrl+C)
+2026-01-14 20:24:40,242 - Orchestrator - INFO - Shutting down orchestrator...
+2026-01-14 20:24:40,246 - Orchestrator - INFO - Orchestrator stopped
+2026-01-14 20:29:45,100 - Orchestrator - INFO - Loaded 1 tasks from state file
+2026-01-14 20:29:45,101 - Orchestrator - INFO - Watching directory: /Users/masif/Desktop/AgenticAI/FTE_SHOP/AI_Employee_Vault/Needs_Action
+2026-01-14 20:29:45,101 - Orchestrator - INFO - ============================================================
+2026-01-14 20:29:45,101 - Orchestrator - INFO - AI EMPLOYEE ORCHESTRATOR STARTING
+2026-01-14 20:29:45,101 - Orchestrator - INFO - ============================================================
+2026-01-14 20:29:45,101 - Orchestrator - INFO - Vault path: /Users/masif/Desktop/AgenticAI/FTE_SHOP/AI_Employee_Vault
+2026-01-14 20:29:45,101 - Orchestrator - INFO - Watching: /Users/masif/Desktop/AgenticAI/FTE_SHOP/AI_Employee_Vault/Needs_Action
+2026-01-14 20:29:45,101 - Orchestrator - INFO - Dry run mode: False
+2026-01-14 20:29:45,101 - Orchestrator - INFO - Debug mode: False
+2026-01-14 20:29:45,101 - Orchestrator - INFO - Max concurrent tasks: 3
+2026-01-14 20:29:45,101 - Orchestrator - INFO - Check interval: 30s
+2026-01-14 20:29:45,102 - Orchestrator - INFO - ✓ File watcher started successfully
+2026-01-14 20:29:45,102 - Orchestrator - INFO - ✓ Monitoring for new .md files in: Needs_Action/
+2026-01-14 20:29:45,102 - Orchestrator - INFO - Found 1 existing task files
+2026-01-14 20:29:45,102 - Orchestrator - INFO - Added task: EMAIL_My_Order___Coding_Agent__1003_19bbd12d (email)
+2026-01-14 20:29:45,102 - Orchestrator - INFO - Processing tasks: 1 pending, 0 active
+2026-01-14 20:29:45,102 - Orchestrator - INFO - Processing task: EMAIL_My_Order___Coding_Agent__1003_19bbd12d (type: email, priority: 8)
+2026-01-14 20:29:45,102 - Orchestrator - INFO - Invoking Claude Code for task EMAIL_My_Order___Coding_Agent__1003_19bbd12d
+2026-01-14 20:31:21,078 - Orchestrator - INFO - Claude completed task EMAIL_My_Order___Coding_Agent__1003_19bbd12d successfully
+2026-01-14 20:31:21,080 - Orchestrator - INFO - ✓ Task EMAIL_My_Order___Coding_Agent__1003_19bbd12d completed successfully
+2026-01-14 20:31:21,080 - Orchestrator - INFO - ============================================================
+2026-01-14 20:31:21,080 - Orchestrator - INFO - Orchestrator is now running. Press Ctrl+C to stop.
+2026-01-14 20:31:21,080 - Orchestrator - INFO - ============================================================
+2026-01-14 20:31:21,081 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:31:51,087 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:32:21,088 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:32:51,094 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:33:21,097 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:33:51,103 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:34:21,105 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:34:51,111 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:35:21,117 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:35:51,123 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:36:21,130 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:36:51,105 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:37:21,108 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:37:51,113 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:38:21,118 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:38:51,125 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:39:21,128 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:39:51,135 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:40:21,139 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:40:51,146 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:41:21,152 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:41:51,167 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:42:21,173 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:42:51,180 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 20:43:14,320 - Orchestrator - INFO - 
+Received shutdown signal (Ctrl+C)
+2026-01-14 20:43:14,320 - Orchestrator - INFO - Shutting down orchestrator...
+2026-01-14 20:43:14,323 - Orchestrator - INFO - Orchestrator stopped

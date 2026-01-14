@@ -22,7 +22,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Configuration
-VAULT_PATH = Path(os.getenv('VAULT_PATH', './vault'))
+VAULT_PATH = Path(os.getenv('VAULT_PATH', './AI_Employee_Vault'))
 NEEDS_ACTION_PATH = VAULT_PATH / 'Needs_Action'
 PLANS_PATH = VAULT_PATH / 'Plans'
 PENDING_APPROVAL_PATH = VAULT_PATH / 'Pending_Approval'
@@ -31,14 +31,16 @@ DONE_PATH = VAULT_PATH / 'Done'
 LOGS_PATH = VAULT_PATH / 'Logs'
 
 # Orchestrator settings
-CHECK_INTERVAL = 30  # seconds
-MAX_CONCURRENT_TASKS = 3
-CLAUDE_TIMEOUT = 300  # 5 minutes max per task
+CHECK_INTERVAL = int(os.getenv('CHECK_INTERVAL', '30'))  # seconds
+MAX_CONCURRENT_TASKS = int(os.getenv('MAX_CONCURRENT_TASKS', '3'))
+CLAUDE_TIMEOUT = int(os.getenv('CLAUDE_TIMEOUT', '300'))  # 5 minutes max per task
 DRY_RUN = os.getenv('DRY_RUN', 'false').lower() == 'true'
+DEBUG_MODE = os.getenv('DEBUG_MODE', 'false').lower() == 'true'
 
 # Setup logging
+log_level = logging.DEBUG if DEBUG_MODE else logging.INFO
 logging.basicConfig(
-    level=logging.INFO,
+    level=log_level,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
         logging.FileHandler(LOGS_PATH / f'orchestrator_{datetime.now().strftime("%Y%m%d")}.log'),
@@ -152,8 +154,8 @@ class ClaudeCodeExecutor:
             # Build Claude Code command
             cmd = [
                 'claude',
-                '--cwd', str(self.vault_path),
-                '--prompt', prompt
+                prompt,
+                '--dangerously-skip-permissions',
             ]
             
             logger.info(f"Invoking Claude Code for task {task.id}")
@@ -224,19 +226,36 @@ class VaultWatcher(FileSystemEventHandler):
         self.orchestrator = orchestrator
         super().__init__()
     
-    def on_created(self, event: FileCreatedEvent):
+    def on_created(self, event):
         """Handle new file creation"""
+        logger.debug(f"File event detected: {event.src_path} (is_directory: {event.is_directory})")
+        
         if event.is_directory:
             return
         
         file_path = Path(event.src_path)
         
-        # Only process .md files in Needs_Action
-        if file_path.suffix != '.md' or file_path.parent != NEEDS_ACTION_PATH:
+        # Only process .md files
+        if file_path.suffix != '.md':
+            logger.debug(f"Ignoring non-markdown file: {file_path.name}")
             return
         
-        logger.info(f"New task file detected: {file_path.name}")
+        # Check if file is in Needs_Action folder
+        if file_path.parent.resolve() != NEEDS_ACTION_PATH.resolve():
+            logger.debug(f"Ignoring file outside Needs_Action: {file_path}")
+            return
+        
+        logger.info(f"✓ New task file detected: {file_path.name}")
+        
+        # Small delay to ensure file is fully written
+        time.sleep(0.5)
+        
         self.orchestrator.handle_new_task_file(file_path)
+    
+    def on_modified(self, event):
+        """Log modifications for debugging"""
+        if not event.is_directory:
+            logger.debug(f"File modified: {event.src_path}")
 
 
 class Orchestrator:
@@ -251,8 +270,11 @@ class Orchestrator:
         # Ensure all directories exist
         self._ensure_directories()
         
-        # Setup file watcher
-        self.observer.schedule(VaultWatcher(self), str(NEEDS_ACTION_PATH), recursive=False)
+        # Setup file watcher - watch the entire vault, but filter in handler
+        vault_watcher = VaultWatcher(self)
+        self.observer.schedule(vault_watcher, str(NEEDS_ACTION_PATH.resolve()), recursive=False)
+        
+        logger.info(f"Watching directory: {NEEDS_ACTION_PATH.resolve()}")
     
     def _ensure_directories(self):
         """Create necessary directories if they don't exist"""
@@ -263,17 +285,37 @@ class Orchestrator:
     def handle_new_task_file(self, file_path: Path):
         """Process a newly created task file"""
         try:
+            # Ensure we're working with absolute paths
+            file_path = file_path.resolve()
+            
+            # Verify file exists
+            if not file_path.exists():
+                logger.error(f"Task file does not exist: {file_path}")
+                return
+            
             # Read the file to extract metadata
-            with open(file_path, 'r') as f:
-                content = f.read()
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+            except Exception as e:
+                logger.error(f"Failed to read task file {file_path}: {e}")
+                return
             
             # Parse task type from filename or content
             task_type = self._determine_task_type(file_path, content)
             priority = self._determine_priority(content)
             
+            # Create task ID from filename (remove special chars)
+            task_id = file_path.stem.replace(' ', '_').replace('-', '_')
+            
+            # Check if task already exists
+            if task_id in self.task_manager.tasks:
+                logger.debug(f"Task {task_id} already exists, skipping")
+                return
+            
             # Create task
             task = Task(
-                id=file_path.stem,
+                id=task_id,
                 file_path=file_path,
                 task_type=task_type,
                 status='pending',
@@ -288,7 +330,7 @@ class Orchestrator:
             self.process_pending_tasks()
         
         except Exception as e:
-            logger.error(f"Failed to handle new task file {file_path}: {e}")
+            logger.error(f"Failed to handle new task file {file_path}: {e}", exc_info=DEBUG_MODE)
     
     def _determine_task_type(self, file_path: Path, content: str) -> str:
         """Determine task type from filename or content"""
@@ -342,11 +384,18 @@ class Orchestrator:
     def _process_task(self, task: Task):
         """Process a single task"""
         try:
+            logger.info(f"Processing task: {task.id} (type: {task.task_type}, priority: {task.priority})")
+            
             # Update status
             self.task_manager.update_task(task.id, status='processing')
             
             # Build prompt for Claude
-            prompt = self._build_prompt(task)
+            try:
+                prompt = self._build_prompt(task)
+            except Exception as e:
+                logger.error(f"Failed to build prompt for task {task.id}: {e}")
+                self.task_manager.update_task(task.id, status='failed')
+                return
             
             # Invoke Claude
             success = self.claude_executor.invoke_claude(task, prompt)
@@ -356,7 +405,7 @@ class Orchestrator:
                 done_file = DONE_PATH / task.file_path.name
                 if done_file.exists():
                     self.task_manager.update_task(task.id, status='completed')
-                    logger.info(f"Task {task.id} completed successfully")
+                    logger.info(f"✓ Task {task.id} completed successfully")
                 else:
                     # Check if approval required
                     approval_files = list(PENDING_APPROVAL_PATH.glob(f'*{task.id}*'))
@@ -366,6 +415,7 @@ class Orchestrator:
                     else:
                         # Task processed but still in Needs_Action - keep pending
                         self.task_manager.update_task(task.id, status='pending')
+                        logger.info(f"Task {task.id} processed but not moved to Done, will retry")
             else:
                 # Retry logic
                 if task.retry_count < task.max_retries:
@@ -380,35 +430,70 @@ class Orchestrator:
                     logger.error(f"Task {task.id} failed after {task.max_retries} retries")
         
         except Exception as e:
-            logger.error(f"Error processing task {task.id}: {e}")
-            self.task_manager.update_task(task.id, status='failed')
+            logger.error(f"Error processing task {task.id}: {e}", exc_info=True)
+            # Retry logic
+            if task.retry_count < task.max_retries:
+                self.task_manager.update_task(task.id, status='pending')
+            else:
+                self.task_manager.update_task(task.id, status='failed')
     
     def _build_prompt(self, task: Task) -> str:
         """Build the prompt for Claude based on task"""
-        prompt = f"""You are an AI Employee managing tasks in an Obsidian vault.
+        
+        # Calculate relative path from vault root - handle both absolute and relative paths
+        try:
+            if task.file_path.is_absolute():
+                vault_resolved = VAULT_PATH.resolve()
+                file_resolved = task.file_path.resolve()
+                relative_path = file_resolved.relative_to(vault_resolved)
+            else:
+                relative_path = task.file_path.relative_to(VAULT_PATH)
+        except ValueError:
+            # If relative_to fails, just use the filename
+            logger.warning(f"Could not calculate relative path for {task.file_path}, using filename only")
+            relative_path = Path("Needs_Action") / task.file_path.name
+        
+        prompt = f"""You are an AI Employee managing tasks in an Obsidian vault located at: {VAULT_PATH.resolve()}
 
-A new task has been detected in /Needs_Action:
-File: {task.file_path.name}
+A new task has been detected:
+File: {relative_path}
+Filename: {task.file_path.name}
 Type: {task.task_type}
 Priority: {task.priority}
 
+Your vault structure (all paths relative to {VAULT_PATH.resolve()}):
+- Needs_Action/ - Incoming tasks (where this file is)
+- Plans/ - Create plan files here
+- Pending_Approval/ - Put sensitive actions here for approval
+- Approved/ - Approved actions to execute
+- Done/ - Move completed tasks here
+- Logs/ - Log all actions
+
 Your instructions:
-1. Read the task file at {task.file_path}
-2. Read the Company_Handbook.md for business rules
+1. Read the task file: Needs_Action/{task.file_path.name}
+2. Read the Company_Handbook.md for business rules and guidelines
 3. Analyze what action is required
-4. Create a Plan.md file in /Plans folder with your reasoning and steps
-5. If the action requires approval (payment, sensitive email), create an approval request in /Pending_Approval
-6. If you can complete the action autonomously, do so following handbook rules
-7. Move completed tasks to /Done folder
-8. Log all actions
+4. Create a Plan.md file in Plans/ folder with your reasoning and steps
+5. If the action requires approval (payment, sensitive email, important decision), create an approval request in Pending_Approval/ folder
+6. If you can complete the action autonomously following handbook rules, do so
+7. When task is complete, move the original file from Needs_Action/ to Done/ folder
+8. Log all actions taken
+
+IMPORTANT FOLDER PATHS (use these exact paths in your file operations):
+- Task file location: Needs_Action/{task.file_path.name}
+- Create plans in: Plans/PLAN_[taskname].md
+- Approval requests in: Pending_Approval/APPROVAL_[action]_[taskname].md
+- Move completed to: Done/{task.file_path.name}
+- Write logs to: Logs/
 
 Remember: 
 - Always follow Company_Handbook.md rules
 - Flag any uncertain or high-risk actions for human approval
 - Be thorough but efficient
-- Update the Dashboard.md with progress
+- Update the Dashboard.md with your progress
+- MUST move task file to Done/ folder when complete
 
-Start processing now."""
+Start processing this task now."""
         
         return prompt
     
@@ -508,15 +593,28 @@ Generate weekly CEO briefing for {datetime.now().strftime('%Y-%m-%d')}
         logger.info("=" * 60)
         logger.info("AI EMPLOYEE ORCHESTRATOR STARTING")
         logger.info("=" * 60)
-        logger.info(f"Vault path: {VAULT_PATH}")
+        logger.info(f"Vault path: {VAULT_PATH.resolve()}")
+        logger.info(f"Watching: {NEEDS_ACTION_PATH.resolve()}")
         logger.info(f"Dry run mode: {DRY_RUN}")
+        logger.info(f"Debug mode: {DEBUG_MODE}")
         logger.info(f"Max concurrent tasks: {MAX_CONCURRENT_TASKS}")
+        logger.info(f"Check interval: {CHECK_INTERVAL}s")
+        
+        # Verify vault structure
+        if not VAULT_PATH.exists():
+            logger.error(f"Vault path does not exist: {VAULT_PATH}")
+            return
+        
+        if not NEEDS_ACTION_PATH.exists():
+            logger.error(f"Needs_Action folder does not exist: {NEEDS_ACTION_PATH}")
+            return
         
         self.running = True
         
         # Start file watcher
         self.observer.start()
-        logger.info("File watcher started")
+        logger.info("✓ File watcher started successfully")
+        logger.info(f"✓ Monitoring for new .md files in: {NEEDS_ACTION_PATH.name}/")
         
         # Process any existing pending tasks
         existing_files = list(NEEDS_ACTION_PATH.glob('*.md'))
@@ -525,9 +623,21 @@ Generate weekly CEO briefing for {datetime.now().strftime('%Y-%m-%d')}
             for file in existing_files:
                 if not self.task_manager.get_task_by_file(file):
                     self.handle_new_task_file(file)
+        else:
+            logger.info("No existing task files found in Needs_Action/")
+        
+        logger.info("=" * 60)
+        logger.info("Orchestrator is now running. Press Ctrl+C to stop.")
+        logger.info("=" * 60)
         
         try:
+            iteration = 0
             while self.running:
+                iteration += 1
+                
+                if DEBUG_MODE or iteration % 10 == 1:  # Log every 10 cycles or in debug mode
+                    logger.debug(f"Main loop iteration {iteration}")
+                
                 # Process pending tasks
                 self.process_pending_tasks()
                 
@@ -541,7 +651,7 @@ Generate weekly CEO briefing for {datetime.now().strftime('%Y-%m-%d')}
                 time.sleep(CHECK_INTERVAL)
         
         except KeyboardInterrupt:
-            logger.info("Received shutdown signal")
+            logger.info("\nReceived shutdown signal (Ctrl+C)")
         
         finally:
             self.stop()

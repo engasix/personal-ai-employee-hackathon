@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
+                "file": "AI_Employee_Vault/Dashboard.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "README"
+              "title": "Dashboard"
             }
           }
         ]
@@ -78,7 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 328.5
+    "width": 519.5
   },
   "right": {
     "id": "95c26659fc04b7b8",
@@ -183,18 +183,28 @@
       "bases:Create new base": false
     }
   },
-  "active": "66582acf3c494e21",
+  "active": "bf84b7253c291794",
   "lastOpenFiles": [
-    "AI_Employee_Vault/Logs/claude_output_EMAIL_My Order - Coding Agent_19bbc648.log",
-    "AI_Employee_Vault/Logs/orchestrator_20260114.log",
-    "Personal AI Employee Hackathon 0_ Building Autonomous FTEs in 2026.pdf",
+    "clean_vault.py",
+    "AI_Employee_Vault/Plans/PLAN_Order_CodingAgent_1003.md",
     "README.md",
+    "AI_Employee_Vault/Logs/claude_output_EMAIL_My_Order___Coding_Agent__1003_19bbd12d.log",
+    "AI_Employee_Vault/Done/EMAIL_My Order - Coding Agent  1003_19bbd12d.md",
+    "AI_Employee_Vault/Logs/LOG_2026-01-14_CodingAgent_1003.md",
+    "AI_Employee_Vault/Pending_Approval/APPROVAL_CustomQuote_CodingAgent_1003.md",
+    "AI_Employee_Vault/Needs_Action/EMAIL_My Order - Coding Agent  1003_19bbd12d.md",
+    "AI_Employee_Vault/Logs/orchestrator_20260114.log",
+    "AI_Employee_Vault/Logs/claude_output_EMAIL_My Order - Coding Agent  1002_19bbcc48.log",
+    "AI_Employee_Vault/Needs_Action/EMAIL_My Order - Coding Agent  1002_19bbcc48.md",
+    "AI_Employee_Vault/Logs/claude_output_EMAIL_My Order - Coding Agent  1001_19bbcb40.log",
+    "AI_Employee_Vault/Needs_Action/EMAIL_My Order - Coding Agent  1001_19bbcb40.md",
+    "AI_Employee_Vault/Logs/claude_output_EMAIL_My Order - Coding Agent_19bbc648.log",
+    "Personal AI Employee Hackathon 0_ Building Autonomous FTEs in 2026.pdf",
     "AI_Employee_Vault/Dashboard.md",
     "test.py",
     "env",
     "env.example",
     "orchestrator.py",
-    "requirements.txt",
     "AI_Employee_Vault/Pending_Approval/EMAIL_REPLY_Coding_Agent_Inquiry_19bbc648.md",
     "AI_Employee_Vault/Needs_Action/EMAIL_My Order - Coding Agent_19bbc648.md",
     "AI_Employee_Vault/Needs_Action/EMAIL_New Order Received  FTE SHOP_19bbc4bf.md",
@@ -204,19 +214,12 @@
     "AI_Employee_Vault/Plans/Jee.md",
     "AI_Employee_Vault/Logs/Jee.md",
     "AI_Employee_Vault/Approved/Jee.md",
-    "clean_vault.sh",
-    "AI_Employee_Vault/Inbox/demo_inquiry.txt.sb-03c5472a-3zVFNv",
     "Needs_Action/EMAIL_Order - Gmail Assistant_19bb858d.md",
     "AI_Employee_Vault/Needs_Action/EMAIL_Order - Gmail Assistant_19bb858d.md",
-    "watchers/token.json",
     "Needs_Action/FILE_demo_inquiry_2026-01-13T21-32-17.546009.md",
     "AI_Employee_Vault/Needs_Action/FILE_demo_inquiry_2026-01-13T21-22-29.756778.md",
     "CLAUDE.md",
     "Dashboard.md",
-    "Business_Goals.md",
-    "Company_Handbook.md",
-    "Needs_Action.md",
-    "README.md.md",
-    "Welcome.md"
+    "Business_Goals.md"
   ]
 }
