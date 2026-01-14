@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI_Employee_Vault/Dashboard.md",
+                "file": "README.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Dashboard"
+              "title": "README"
             }
           }
         ]
@@ -185,18 +185,19 @@
   },
   "active": "bf84b7253c291794",
   "lastOpenFiles": [
+    "Personal AI Employee Hackathon 0_ Building Autonomous FTEs in 2026.pdf",
+    "README.md",
+    "AI_Employee_Vault/Dashboard.md",
     "AI_Employee_Vault/Logs/orchestrator_20260114.log",
     "test.py",
     "env",
     "env.example",
     "orchestrator.py",
     "requirements.txt",
-    "Personal AI Employee Hackathon 0_ Building Autonomous FTEs in 2026.pdf",
     "AI_Employee_Vault/Pending_Approval/EMAIL_REPLY_Coding_Agent_Inquiry_19bbc648.md",
     "AI_Employee_Vault/Needs_Action/EMAIL_My Order - Coding Agent_19bbc648.md",
     "AI_Employee_Vault/Needs_Action/EMAIL_New Order Received  FTE SHOP_19bbc4bf.md",
     "AI_Employee_Vault/Business_Goals.md",
-    "AI_Employee_Vault/Dashboard.md",
     "AI_Employee_Vault/Company_Handbook.md",
     "AI_Employee_Vault/Rejected/Jee.md",
     "AI_Employee_Vault/Plans/Jee.md",
@@ -204,11 +205,9 @@
     "AI_Employee_Vault/Approved/Jee.md",
     "clean_vault.sh",
     "AI_Employee_Vault/Inbox/demo_inquiry.txt.sb-03c5472a-3zVFNv",
-    "README.md",
     "Needs_Action/EMAIL_Order - Gmail Assistant_19bb858d.md",
     "AI_Employee_Vault/Needs_Action/EMAIL_Order - Gmail Assistant_19bb858d.md",
     "watchers/token.json",
-    "AI_Employee_Vault/Needs_Action",
     "Needs_Action/FILE_demo_inquiry_2026-01-13T21-32-17.546009.md",
     "AI_Employee_Vault/Needs_Action/FILE_demo_inquiry_2026-01-13T21-22-29.756778.md",
     "CLAUDE.md",
