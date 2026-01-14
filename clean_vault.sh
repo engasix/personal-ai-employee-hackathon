@@ -2,4 +2,6 @@
 
 find "AI_Employee_Vault" -mindepth 2 -type f -delete
 
-echo "The vault has been successfully cleaned."
+"" > AI_Employee_Vault/.orchestrator_state.json
+
+echo "The vault has been cleaned, successfully."
