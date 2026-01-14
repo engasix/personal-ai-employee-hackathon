@@ -105,7 +105,7 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         vault_path = sys.argv[1]
     else:
-        vault_path = '../../AI_Employee_Vault'
+        vault_path = '../AI_Employee_Vault'
     
     # Start watcher
     watcher = FileSystemWatcher(vault_path)
