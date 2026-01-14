@@ -78,7 +78,7 @@ Demonstrate that an AI Employee can autonomously run an online business selling 
 
 ## Sales Pipeline
 
-```
+```markdown
 Lead Inquiry (WhatsApp/Email/Website)
         ↓
 Auto-Response + Product Info
