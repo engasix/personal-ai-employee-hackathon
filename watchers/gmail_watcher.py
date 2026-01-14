@@ -1,6 +1,7 @@
 """
 Gmail Watcher
 Monitors Gmail for new unread emails and creates action items.
+Marks emails as read after processing.
 """
 
 import os
@@ -13,8 +14,8 @@ from googleapiclient.discovery import build
 from base_watcher import BaseWatcher
 
 
-# Gmail API scopes
-SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+# Gmail API scopes - need modify to mark as read
+SCOPES = ['https://www.googleapis.com/auth/gmail.modify']
 
 
 class GmailWatcher(BaseWatcher):
@@ -69,6 +70,23 @@ class GmailWatcher(BaseWatcher):
             self.token_path.write_text(creds.to_json())
         
         return build('gmail', 'v1', credentials=creds)
+    
+    def _mark_as_read(self, message_id: str):
+        """
+        Mark an email as read by removing UNREAD label.
+        
+        Args:
+            message_id: Gmail message ID
+        """
+        try:
+            self.service.users().messages().modify(
+                userId='me',
+                id=message_id,
+                body={'removeLabelIds': ['UNREAD']}
+            ).execute()
+            self.logger.info(f'Marked email {message_id} as read')
+        except Exception as e:
+            self.logger.error(f'Error marking email as read: {e}')
     
     def check_for_updates(self) -> list:
         """
@@ -144,7 +162,7 @@ class GmailWatcher(BaseWatcher):
     
     def create_action_file(self, item: dict) -> Path:
         """
-        Create action file for an email.
+        Create action file for an email and mark it as read.
         
         Args:
             item: Email message dictionary
@@ -201,7 +219,10 @@ gmail_id: {item['id']}
         action_path = self.needs_action / action_filename
         action_path.write_text(content)
         
-        # Mark as processed
+        # Mark email as read in Gmail
+        self._mark_as_read(item['id'])
+        
+        # Mark as processed locally
         self.processed_ids.add(item['id'])
         
         return action_path

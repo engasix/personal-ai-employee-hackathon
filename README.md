@@ -56,10 +56,10 @@ Building a "Digital FTE" (Full-Time Equivalent) — an AI employee that proactiv
 
 ### Phase 2: Perception Layer (Watchers)
 
-- [ ] Base watcher pattern implementation
-- [ ] Gmail watcher + SKILL.md
+- [x] Base watcher pattern implementation
+- [x] Gmail watcher + SKILL.md
 - [ ] WhatsApp watcher + SKILL.md
-- [ ] File system watcher + SKILL.md
+- [x] File system watcher + SKILL.md
 
 ### Phase 3: Reasoning Layer (Claude Code)
 
@@ -67,7 +67,7 @@ Building a "Digital FTE" (Full-Time Equivalent) — an AI employee that proactiv
 - [ ] Claude Code writing to vault
 - [ ] Reasoning loop that creates Plan.md files
 - [ ] Ralph Wiggum loop for autonomous task completion
-- [ ] Vault operator SKILL.md
+- [x] Vault operator SKILL.md
 
 ### Phase 4: Action Layer (MCP + HITL)
 
