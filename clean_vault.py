@@ -167,7 +167,7 @@ if __name__ == '__main__':
     print(f"\nThis will reset vault at: {VAULT_PATH.resolve()}")
     confirm = input("Are you sure? (yes/no): ")
     
-    if confirm.lower() == 'yes':
+    if confirm.lower() == 'yes' or confirm.lower() == 'y':
         reset_vault()
     else:
         print("Reset cancelled.")

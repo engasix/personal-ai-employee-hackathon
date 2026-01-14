@@ -1,27 +1,4 @@
 {
-  "tasks": [
-    {
-      "id": "EMAIL_My Order - Coding Agent  1003_19bbd12d",
-      "file_path": "/Users/masif/Desktop/AgenticAI/FTE_SHOP/AI_Employee_Vault/Needs_Action/EMAIL_My Order - Coding Agent  1003_19bbd12d.md",
-      "task_type": "email",
-      "status": "failed",
-      "created_at": "2026-01-14T20:15:24.658967",
-      "updated_at": "2026-01-14T20:15:24.663086",
-      "priority": 8,
-      "retry_count": 0,
-      "max_retries": 3
-    },
-    {
-      "id": "EMAIL_My_Order___Coding_Agent__1003_19bbd12d",
-      "file_path": "/Users/masif/Desktop/AgenticAI/FTE_SHOP/AI_Employee_Vault/Needs_Action/EMAIL_My Order - Coding Agent  1003_19bbd12d.md",
-      "task_type": "email",
-      "status": "completed",
-      "created_at": "2026-01-14T20:29:45.102527",
-      "updated_at": "2026-01-14T20:31:21.079813",
-      "priority": 8,
-      "retry_count": 0,
-      "max_retries": 3
-    }
-  ],
-  "last_updated": "2026-01-14T20:43:14.322283"
+  "tasks": [],
+  "last_updated": ""
 }
