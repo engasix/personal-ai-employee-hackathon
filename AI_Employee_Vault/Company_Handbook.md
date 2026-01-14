@@ -182,7 +182,7 @@ This handbook defines how our AI Employee operates. Follow these rules at all ti
 |Role|Contact|When to Use|
 |---|---|---|
 |Owner|[Your Email]|High-value decisions, emergencies|
-|Support|support@fteshop.com|Customer escalations|
+|Support|[support@fteshop.com](mailto:support@fteshop.com)|Customer escalations|
 
 ---
 
