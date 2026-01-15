@@ -11,14 +11,10 @@
             "id": "bf84b7253c291794",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "AI_Employee_Vault/Dashboard.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "Dashboard"
+              "title": "New tab"
             }
           }
         ]
@@ -185,6 +181,20 @@
   },
   "active": "bf84b7253c291794",
   "lastOpenFiles": [
+    "AI_Employee_Vault/Logs/orchestrator_20260114.log",
+    "AI_Employee_Vault/Pending_Approval/APPROVAL_RESPONSE_Coding_Agent_1004.md",
+    "AI_Employee_Vault/Logs/claude_output_EMAIL_My_Order___Coding_Agent__1004_19bbd36e.log",
+    "AI_Employee_Vault/Done/EMAIL_My Order - Coding Agent  1004_19bbd36e.md",
+    "AI_Employee_Vault/Logs/LOG_2026-01-14_Coding_Agent_1004.md",
+    "AI_Employee_Vault/Plans/PLAN_EMAIL_My_Order_Coding_Agent_1004.md",
+    "AI_Employee_Vault/Dashboard.md",
+    "AI_Employee_Vault/Needs_Action/EMAIL_My Order - Coding Agent  1004_19bbd36e.md",
+    "AI_Employee_Vault/Done/EMAIL_My Order - Coding Agent  1003_19bbd308.md",
+    "AI_Employee_Vault/Logs/LOG_2026-01-14_CodingAgent1003.md",
+    "AI_Employee_Vault/Pending_Approval/APPROVAL_CustomQuote_CodingAgent1003.md",
+    "AI_Employee_Vault/Plans/PLAN_CodingAgent_Order1003.md",
+    "AI_Employee_Vault/Logs/claude_output_EMAIL_My_Order___Coding_Agent__1003_19bbd308.log",
+    "AI_Employee_Vault/Needs_Action/EMAIL_My Order - Coding Agent  1003_19bbd308.md",
     "clean_vault.py",
     "AI_Employee_Vault/Plans/PLAN_Order_CodingAgent_1003.md",
     "README.md",
@@ -193,33 +203,18 @@
     "AI_Employee_Vault/Logs/LOG_2026-01-14_CodingAgent_1003.md",
     "AI_Employee_Vault/Pending_Approval/APPROVAL_CustomQuote_CodingAgent_1003.md",
     "AI_Employee_Vault/Needs_Action/EMAIL_My Order - Coding Agent  1003_19bbd12d.md",
-    "AI_Employee_Vault/Logs/orchestrator_20260114.log",
     "AI_Employee_Vault/Logs/claude_output_EMAIL_My Order - Coding Agent  1002_19bbcc48.log",
     "AI_Employee_Vault/Needs_Action/EMAIL_My Order - Coding Agent  1002_19bbcc48.md",
     "AI_Employee_Vault/Logs/claude_output_EMAIL_My Order - Coding Agent  1001_19bbcb40.log",
     "AI_Employee_Vault/Needs_Action/EMAIL_My Order - Coding Agent  1001_19bbcb40.md",
     "AI_Employee_Vault/Logs/claude_output_EMAIL_My Order - Coding Agent_19bbc648.log",
     "Personal AI Employee Hackathon 0_ Building Autonomous FTEs in 2026.pdf",
-    "AI_Employee_Vault/Dashboard.md",
     "test.py",
-    "env",
-    "env.example",
-    "orchestrator.py",
     "AI_Employee_Vault/Pending_Approval/EMAIL_REPLY_Coding_Agent_Inquiry_19bbc648.md",
     "AI_Employee_Vault/Needs_Action/EMAIL_My Order - Coding Agent_19bbc648.md",
     "AI_Employee_Vault/Needs_Action/EMAIL_New Order Received  FTE SHOP_19bbc4bf.md",
     "AI_Employee_Vault/Business_Goals.md",
     "AI_Employee_Vault/Company_Handbook.md",
-    "AI_Employee_Vault/Rejected/Jee.md",
-    "AI_Employee_Vault/Plans/Jee.md",
-    "AI_Employee_Vault/Logs/Jee.md",
-    "AI_Employee_Vault/Approved/Jee.md",
-    "Needs_Action/EMAIL_Order - Gmail Assistant_19bb858d.md",
-    "AI_Employee_Vault/Needs_Action/EMAIL_Order - Gmail Assistant_19bb858d.md",
-    "Needs_Action/FILE_demo_inquiry_2026-01-13T21-32-17.546009.md",
-    "AI_Employee_Vault/Needs_Action/FILE_demo_inquiry_2026-01-13T21-22-29.756778.md",
-    "CLAUDE.md",
-    "Dashboard.md",
-    "Business_Goals.md"
+    "AI_Employee_Vault/Rejected/Jee.md"
   ]
 }

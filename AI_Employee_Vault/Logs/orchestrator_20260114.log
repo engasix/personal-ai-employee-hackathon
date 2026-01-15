@@ -1,0 +1,22 @@
+2026-01-14 22:46:04,317 - Orchestrator - INFO - Loaded 0 tasks from state file
+2026-01-14 22:46:04,318 - Orchestrator - INFO - Watching directory: /Users/masif/Desktop/AgenticAI/FTE_SHOP/AI_Employee_Vault/Needs_Action
+2026-01-14 22:46:04,318 - Orchestrator - INFO - ============================================================
+2026-01-14 22:46:04,318 - Orchestrator - INFO - AI EMPLOYEE ORCHESTRATOR STARTING
+2026-01-14 22:46:04,318 - Orchestrator - INFO - ============================================================
+2026-01-14 22:46:04,318 - Orchestrator - INFO - Vault path: /Users/masif/Desktop/AgenticAI/FTE_SHOP/AI_Employee_Vault
+2026-01-14 22:46:04,318 - Orchestrator - INFO - Watching: /Users/masif/Desktop/AgenticAI/FTE_SHOP/AI_Employee_Vault/Needs_Action
+2026-01-14 22:46:04,318 - Orchestrator - INFO - Dry run mode: False
+2026-01-14 22:46:04,318 - Orchestrator - INFO - Debug mode: False
+2026-01-14 22:46:04,318 - Orchestrator - INFO - Max concurrent tasks: 3
+2026-01-14 22:46:04,318 - Orchestrator - INFO - Check interval: 30s
+2026-01-14 22:46:04,318 - Orchestrator - INFO - ✓ File watcher started successfully
+2026-01-14 22:46:04,318 - Orchestrator - INFO - ✓ Monitoring for new .md files in: Needs_Action/
+2026-01-14 22:46:04,319 - Orchestrator - INFO - No existing task files found in Needs_Action/
+2026-01-14 22:46:04,319 - Orchestrator - INFO - ============================================================
+2026-01-14 22:46:04,319 - Orchestrator - INFO - Orchestrator is now running. Press Ctrl+C to stop.
+2026-01-14 22:46:04,319 - Orchestrator - INFO - ============================================================
+2026-01-14 22:46:04,319 - Orchestrator - INFO - Running scheduled tasks check
+2026-01-14 22:46:14,681 - Orchestrator - INFO - 
+Received shutdown signal (Ctrl+C)
+2026-01-14 22:46:14,681 - Orchestrator - INFO - Shutting down orchestrator...
+2026-01-14 22:46:14,684 - Orchestrator - INFO - Orchestrator stopped

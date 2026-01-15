@@ -6,13 +6,13 @@
 
 ## Today's Snapshot
 
-| Metric            | Value      |
-| ----------------- | ---------- |
-| Date              | 2026-01-14 |
-| Orders Today      | 0          |
-| Revenue Today     | $0         |
-| Pending Tasks     | 0          |
-| Awaiting Approval | 0          |
+|Metric|Value|
+|---|---|
+|Date|2026-01-14|
+|Orders Today|0|
+|Revenue Today|$0|
+|Pending Tasks|0|
+|Awaiting Approval|0|
 
 ---
 

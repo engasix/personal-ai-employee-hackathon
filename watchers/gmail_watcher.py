@@ -21,7 +21,7 @@ SCOPES = ['https://www.googleapis.com/auth/gmail.modify']
 class GmailWatcher(BaseWatcher):
     """Watches Gmail for new unread emails."""
     
-    def __init__(self, vault_path: str, credentials_path: str = 'credentials.json', check_interval: int = 120):
+    def __init__(self, vault_path: str, credentials_path: str = 'credentials.json', check_interval: int = 60):
         """
         Initialize the Gmail watcher.
         
