@@ -16,6 +16,27 @@
 
 ---
 
+## Channel Activity (Today)
+
+|Channel|Messages|Orders|Inquiries|Support|Refunds|
+|---|---|---|---|---|---|
+|Website|0|0|-|-|-|
+|Gmail|0|-|0|0|0|
+|WhatsApp|0|-|0|0|0|
+
+---
+
+## Message Processing (Today)
+
+|Type|Received|Auto-Resolved|Escalated|Avg Response Time|
+|---|---|---|---|---|
+|Orders|0|0|0|--|
+|General Inquiry|0|0|0|--|
+|Support Request|0|0|0|--|
+|Refund Request|0|0|0|--|
+
+---
+
 ## Weekly Summary
 
 |Metric|This Week|Target|
@@ -41,9 +62,9 @@
 
 ## Recent Activity
 
-|Time|Action|Status|
-|---|---|---|
-|--|No activity yet|--|
+|Time|Channel|Type|Action|Status|
+|---|---|---|---|---|
+|--|--|--|No activity yet|--|
 
 ---
 

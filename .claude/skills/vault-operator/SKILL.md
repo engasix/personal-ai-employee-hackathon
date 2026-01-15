@@ -65,7 +65,42 @@ When asked to process tasks:
 - Move to `/Done` when complete
 - Update `Dashboard.md` with activity
 
+## Message Classification
+
+All incoming messages from **EMAIL** and **WHATSAPP** must be classified into one of 3 types:
+
+### 1. Refund Request
+**Identify by:** "refund", "money back", "cancel order", dissatisfaction + reimbursement
+**Action:** Always escalate to human approval (see Company_Handbook.md)
+
+### 2. Support Request
+**Identify by:** Customer already purchased, technical issues, "how do I", "not working", "help with"
+**Action:** Troubleshoot using FAQ, escalate if complex
+
+### 3. General Inquiry
+**Identify by:** Pre-sales questions, "how much", "what can", product info, no existing order
+**Action:** Auto-respond using FAQ from Company_Handbook.md
+
 ## Task Types
+
+### ORDER Tasks (from Website)
+
+```yaml
+type: order
+```
+
+**File Format:**
+- Order ID, Date, Status
+- Customer Name, Email, Phone
+- Product, Price, Payment Status
+- Special Requests
+
+**Processing:**
+1. Verify payment status is "Paid"
+2. Check amount: if > $500 → flag for approval
+3. If ≤ $500 → Send delivery email with setup docs
+4. Update "Processing Notes" in order file
+5. Move to /Done
 
 ### EMAIL Tasks
 
@@ -73,10 +108,12 @@ When asked to process tasks:
 type: email
 ```
 
-- Read the email content
-- Check if it's a customer inquiry, order, or support request
-- Draft appropriate response
-- If sending email required → Create approval request
+**Processing:**
+1. Read the email content
+2. **Classify** into: Refund Request / Support Request / General Inquiry
+3. Follow classification action from Company_Handbook.md
+4. Draft appropriate response
+5. Create approval request if needed (refunds always need approval)
 
 ### WHATSAPP Tasks
 
@@ -84,11 +121,12 @@ type: email
 type: whatsapp
 ```
 
-- Read the message content
-- Check for keywords (order, pricing, support, urgent)
-- Draft appropriate response
-- If reply needed → Create approval request
-- Note: WhatsApp replies require MCP server (Phase 4)
+**Processing:**
+1. Read the message content
+2. **Classify** into: Refund Request / Support Request / General Inquiry
+3. Follow classification action from Company_Handbook.md
+4. Draft appropriate response
+5. Create approval request for replies (Phase 4 - MCP required)
 
 ### FILE Tasks
 
@@ -102,14 +140,17 @@ type: file_drop
 
 ## Response Templates
 
-**Customer Inquiry:**
-> Hi [Name], thanks for reaching out to FTE Shop!
-> [Answer their question]
-> Let me know if you need anything else.
+**General Inquiry:**
+> Hi [Name], great question! [Answer with product info/pricing]. Our [Product Name] can help with [use case]. Let me know if you'd like more details or want to place an order.
+
+**Support Request:**
+> Hi [Name], I'm happy to help with [issue]. Here's what you can try: [solution]. Let me know if this resolves it or if you need further assistance.
+
+**Refund Request:**
+> I've flagged this for review. We'll get back to you within 24 hours.
 
 **Order Confirmation:**
-> Thank you for your order! Your [Product] is confirmed.
-> You'll receive setup instructions within the next hour.
+> Thank you for your order! Your [Product] is confirmed. You'll receive setup instructions within the next hour.
 
 ## Approval Requests
 
@@ -137,23 +178,61 @@ Move this file to `/Rejected`
 ## Rules
 
 1. **Always** read Company_Handbook.md before acting
-2. **Never** send emails without approval (until trust is established)
-3. **Flag** any order over $500 for human review
-4. **Log** all actions in Dashboard.md
-5. **Be polite** and professional in all communications
-6. **Move** completed tasks to /Done with timestamp
+2. **Classify** all EMAIL and WHATSAPP messages into: Refund Request / Support Request / General Inquiry
+3. **Never** send emails without approval (until trust is established)
+4. **Flag** any order over $500 for human review
+5. **Escalate** all refund requests to /Pending_Approval (never auto-process)
+6. **Use FAQ** from Company_Handbook.md for General Inquiries
+7. **Log** all actions in Dashboard.md with channel and message type
+8. **Be polite** and professional in all communications
+9. **Move** completed tasks to /Done with timestamp
 
-## Example Workflow
+## Example Workflows
+
+### Workflow 1: General Inquiry (Email)
 
 ```markdown
-1. You: Check /Needs_Action
-2. Find: EMAIL_Invoice_Request_abc123.md
-3. Read: Customer asking for pricing
-4. Check: Company_Handbook.md for pricing rules
-5. Draft: Response with pricing info
-6. Create: /Pending_Approval/EMAIL_REPLY_abc123.md
-7. Wait: Human moves to /Approved
-8. Execute: Send email (Phase 4 - MCP)
-9. Complete: Move original task to /Done
-10. Update: Dashboard.md with activity
+1. Check /Needs_Action
+2. Find: EMAIL_Pricing_Question_abc123.md
+3. Read: Customer asking "How much does the Gmail Assistant cost?"
+4. Classify: General Inquiry (pre-sales, product pricing)
+5. Check: Company_Handbook.md FAQ section
+6. Draft: Response with pricing from FAQ
+7. Create: /Pending_Approval/EMAIL_REPLY_abc123.md
+8. Wait: Human moves to /Approved
+9. Execute: Send email (Phase 4 - MCP)
+10. Complete: Move original task to /Done
+11. Update: Dashboard.md (Gmail channel, General Inquiry, resolved)
+```
+
+### Workflow 2: Website Order
+
+```markdown
+1. Check /Needs_Action
+2. Find: ORDER_12345_2026-01-15.md
+3. Read: Customer ordered Social Media Manager Agent for $149
+4. Verify: Payment status = "Paid", Amount = $149 (< $500, no approval needed)
+5. Draft: Order confirmation + delivery email with setup docs
+6. Create: /Pending_Approval/ORDER_DELIVERY_12345.md
+7. Wait: Human approves
+8. Execute: Send delivery email (Phase 4 - MCP)
+9. Update: "Processing Notes" in order file with timestamp
+10. Complete: Move to /Done
+11. Update: Dashboard.md (Website channel, Order, $149 revenue)
+```
+
+### Workflow 3: Refund Request (WhatsApp)
+
+```markdown
+1. Check /Needs_Action
+2. Find: WHATSAPP_Customer_Message_xyz789.md
+3. Read: "I want a refund for order #12340"
+4. Classify: Refund Request (keyword "refund")
+5. Create: /Pending_Approval/REFUND_REQUEST_12340.md with order details
+6. Draft: "I've flagged this for review. We'll get back to you within 24 hours."
+7. Create: /Pending_Approval/WHATSAPP_REPLY_xyz789.md
+8. Wait: Human reviews and approves/denies refund
+9. Execute: Send reply via WhatsApp (Phase 4 - MCP)
+10. Complete: Move to /Done
+11. Update: Dashboard.md (WhatsApp channel, Refund Request, escalated)
 ```
