@@ -127,12 +127,63 @@ Building a "Digital FTE" (Full-Time Equivalent) — an AI employee that proactiv
 |Research Agent|$129 - $349|
 |Custom Agent|$500+|
 
+## Input Channels & Message Classification
+
+### Input Channels (3)
+
+1. **Website Store** → Orders saved as markdown files → Filesystem watcher
+2. **WhatsApp** → Customer messages → WhatsApp watcher
+3. **Gmail** → Customer emails → Gmail watcher
+
+### Message Classification (3 Types)
+
+All messages from WhatsApp and Gmail are classified into:
+
+1. **Refund Request** — Customer wants money back (requires approval)
+2. **Support Request** — Technical help, issues with delivered agents
+3. **General Inquiry** — Product info, quotations, pre-sales questions
+
+### Order File Format
+
+When website creates an order, it generates a markdown file with:
+
+```markdown
+# Order #[ORDER_ID]
+
+**Status:** Pending
+**Date:** [ISO_DATE]
+
+## Customer Information
+- **Name:** [CUSTOMER_NAME]
+- **Email:** [CUSTOMER_EMAIL]
+- **Phone:** [PHONE_NUMBER]
+
+## Order Details
+- **Product:** [PRODUCT_NAME]
+- **Price:** $[AMOUNT]
+- **Payment Status:** [Paid/Pending]
+
+## Special Requests
+[ANY_CUSTOMER_NOTES]
+
+## Processing Notes
+[AGENT_UPDATES_HERE]
+```
+
 **Order Flow:**
 
-1. Customer inquiry via WhatsApp/Email → Watcher detects
-2. Claude reads inquiry + Company_Handbook.md → Creates Plan.md
-3. Auto-responds with product info (or flags for approval)
-4. Order placed → Payment confirmed → Delivery via email
+1. Customer places order on website → Order markdown file created
+2. Filesystem watcher detects → Creates task in /Needs_Action
+3. Claude reads order + Company_Handbook.md → Creates Plan.md
+4. Order fulfilled (delivery email sent via MCP)
+5. Transaction logged → Moved to /Done → CEO Briefing updated
+
+**Support/Inquiry Flow:**
+
+1. Customer message via WhatsApp/Email → Watcher detects
+2. Message classified (Refund/Support/Inquiry)
+3. Claude reads + creates response plan
+4. Auto-responds (or flags for approval if refund)
 5. Transaction logged → CEO Briefing updated
 
 ## Progress Log

@@ -38,6 +38,14 @@ Demonstrate that an AI Employee can autonomously run an online business selling 
 
 ### Order Processing
 
+**Order File Structure:** Website generates markdown with:
+- Order ID, Date, Status
+- Customer Name, Email, Phone
+- Product, Price, Payment Status
+- Special Requests
+
+**Processing Steps:**
+
 - Confirm order receipt immediately
 - Deliver agent documentation/setup instructions via email
 - Schedule onboarding call if needed
@@ -45,9 +53,17 @@ Demonstrate that an AI Employee can autonomously run an online business selling 
 
 ### Customer Communication
 
+**Message Classification:** All incoming messages (WhatsApp/Gmail) are classified into 3 types:
+
+1. **Refund Request** — Requires human approval, create approval file
+2. **Support Request** — Troubleshoot issues, provide technical help
+3. **General Inquiry** — Product info, pricing, quotations (auto-respond)
+
+**Response Guidelines:**
+
 - Auto-respond to common questions (pricing, features, setup)
 - Provide setup support and troubleshooting
-- Escalate complex technical issues to human review
+- Escalate refunds and complex issues to human review
 - Maintain professional, helpful tone (per Company Handbook)
 
 ### Social Media
@@ -79,19 +95,24 @@ Demonstrate that an AI Employee can autonomously run an online business selling 
 ## Sales Pipeline
 
 ```markdown
-Lead Inquiry (WhatsApp/Email/Website)
+INPUT CHANNELS
+├─ Website Store → Order Files → Filesystem Watcher
+├─ WhatsApp Messages → WhatsApp Watcher
+└─ Gmail Messages → Gmail Watcher
         ↓
-Auto-Response + Product Info
+CLASSIFICATION (for WhatsApp/Gmail)
+├─ Refund Request → Approval Required
+├─ Support Request → Technical Help
+└─ General Inquiry → Auto-Response
         ↓
-Customer Questions → Auto-Answer or Escalate
+PROCESSING
+Order → Confirm → Deliver → Log
+Inquiry → Research → Respond → Log
+Support → Troubleshoot → Resolve → Log
+Refund → Review → Approve/Deny → Log
         ↓
-Order Placed
-        ↓
-Payment Confirmed → Delivery (Email)
-        ↓
-Onboarding Support
-        ↓
-Follow-up for Feedback/Upsell
+REPORTING
+All transactions → CEO Briefing (Weekly)
 ```
 
 ## Rules of Engagement
