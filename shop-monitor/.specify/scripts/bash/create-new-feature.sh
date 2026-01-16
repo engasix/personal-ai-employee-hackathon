@@ -155,24 +155,13 @@ clean_branch_name() {
     echo "$name" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/-\+/-/g' | sed 's/^-//' | sed 's/-$//'
 }
 
-# Resolve repository root. Prefer git information when available, but fall back
-# to searching for repository markers so the workflow still functions in repositories that
-# were initialised with --no-git.
-SCRIPT_DIR="$(CDPATH="" cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Use current working directory as repo root (not git root)
+REPO_ROOT="$(pwd)"
+HAS_GIT=false
 
 if git rev-parse --show-toplevel >/dev/null 2>&1; then
-    REPO_ROOT=$(git rev-parse --show-toplevel)
     HAS_GIT=true
-else
-    REPO_ROOT="$(find_repo_root "$SCRIPT_DIR")"
-    if [ -z "$REPO_ROOT" ]; then
-        echo "Error: Could not determine repository root. Please run this script from within the repository." >&2
-        exit 1
-    fi
-    HAS_GIT=false
 fi
-
-cd "$REPO_ROOT"
 
 SPECS_DIR="$REPO_ROOT/specs"
 mkdir -p "$SPECS_DIR"
@@ -271,22 +260,19 @@ if [ ${#BRANCH_NAME} -gt $MAX_BRANCH_LENGTH ]; then
     >&2 echo "[specify] Truncated to: $BRANCH_NAME (${#BRANCH_NAME} bytes)"
 fi
 
-if [ "$HAS_GIT" = true ]; then
-    git checkout -b "$BRANCH_NAME"
-else
-    >&2 echo "[specify] Warning: Git repository not detected; skipped branch creation for $BRANCH_NAME"
-fi
+# Skip branch creation - work in current branch
+>&2 echo "[specify] Skipping branch creation; working in current directory"
 
-FEATURE_DIR="$SPECS_DIR/$BRANCH_NAME"
+# Use specs/ folder directly (no numbered subfolders)
+FEATURE_DIR="$SPECS_DIR"
 mkdir -p "$FEATURE_DIR"
 
 TEMPLATE="$REPO_ROOT/.specify/templates/spec-template.md"
 SPEC_FILE="$FEATURE_DIR/spec.md"
 if [ -f "$TEMPLATE" ]; then cp "$TEMPLATE" "$SPEC_FILE"; else touch "$SPEC_FILE"; fi
 
-# Auto-create history/prompts/<branch-name>/ directory (same as specs/<branch-name>/)
-# This keeps naming consistent across branch, specs, and prompts directories
-PROMPTS_DIR="$REPO_ROOT/history/prompts/$BRANCH_NAME"
+# Use simple history directory
+PROMPTS_DIR="$REPO_ROOT/history/prompts"
 mkdir -p "$PROMPTS_DIR"
 
 # Set the SPECIFY_FEATURE environment variable for the current session
