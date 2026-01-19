@@ -34,104 +34,108 @@ class ShopMonitorApp(App):
     Displays live metrics, channel activity, pending approvals, and activity stream.
     """
 
-    CSS = """
-    Screen {
-        background: black;
-    }
+    LOGO_COLOR = "#FFD700"
+    SUB_LOGO_COLOR = "#98FB98"
+    LINES_COLOR = "#96DED1"
 
-    Header {
-        display: none;
-    }
+    CSS = f"""
+    Screen {{
+        background: #161616;
+    }}
 
-    Footer {
-        background: #0a0a0a;
-        color: cyan;
+    Header {{
+        dock: top;
         height: 1;
-    }
+        background: #161616;
+        color: {LINES_COLOR};
+        content-align: center middle;
+    }}
 
-    Container {
-        background: black;
-    }
+    Footer {{
+        dock: bottom;
+        height: 1;
+        background: #161616;
+        color: {LINES_COLOR};
+    }}
 
-    .brand-header {
-        height: 5;
-        background: #003366;
-        border: heavy cyan;
-        padding: 1 2;
-        text-align: center;
-        color: cyan;
-    }
+    #top-bar {{
+        dock: top;
+        height: 1;
+        background: #161616;
+        color: {LINES_COLOR};
+        border: solid {LINES_COLOR};
+    }}
 
-    .brand-title {
-        text-style: bold;
-        color: cyan;
-        text-align: center;
-    }
+    #logo-section {{
+        height: 14;
+        background: #161616;
+        border: heavy {LINES_COLOR};
+        content-align: center middle;
+    }}
 
-    .brand-subtitle {
-        color: green;
-        text-align: center;
-    }
+    #main-grid {{
+        height: 1fr;
+        layout: grid;
+        grid-size: 2 2;
+        grid-gutter: 1;
+    }}
 
-    .panel {
-        height: auto;
-        border: heavy cyan;
-        padding: 1 2;
-        margin: 0 1 1 1;
-        background: #0a0a0a;
+    .info-box {{
+        height: 100%;
+        background: #161616;
+        border: heavy {LINES_COLOR};
+        padding: 1;
         color: white;
-    }
+    }}
 
-    .panel-title {
+    .info-box:hover {{
+        border: heavy #96DED1;
+        background: #96DED11A;
+    }}
+
+    .info-box-title {{
         text-style: bold;
-        color: cyan;
+        color: {LINES_COLOR};
         text-align: center;
-        padding: 0 0 1 0;
-    }
+        margin-bottom: 1;
+    }}
 
-    .metrics-panel {
-        height: auto;
-        min-height: 10;
-        border: heavy green;
-    }
+    .info-box-content {{
+        color: white;
+    }}
 
-    .approval-panel {
-        height: auto;
-        min-height: 12;
-    }
+    .value-big {{
+        text-style: bold;
+        color: #00ff00;
+    }}
 
-    .placeholder {
+    .label {{
+        color: {LINES_COLOR};
+    }}
+
+    .placeholder {{
         color: $text-muted;
         text-align: center;
-    }
+    }}
 
-    .metric-value {
-        text-style: bold;
-        color: green;
-    }
-
-    .error-notification {
+    .error-notification {{
         background: red;
         color: white;
         text-style: bold;
         padding: 1;
         border: solid yellow;
         margin: 1;
-    }
+    }}
 
-    .success-notification {
-        background: green;
+    .success-notification {{
+        background: {LINES_COLOR};
         color: black;
         text-style: bold;
         padding: 1;
-        border: solid cyan;
+        border: solid #00ff00;
         margin: 1;
-    }
+    }}"""
 
-    Static {
-        color: white;
-    }
-    """
 
     BINDINGS = [
         ("q", "quit", "Quit"),
@@ -167,53 +171,48 @@ class ShopMonitorApp(App):
         Returns:
             Composed result with all widgets
         """
-        # Brand header with FTE SHOP
-        brand_header = Static(classes="brand-header")
-        brand_header.update("""
-[bold cyan]╔═══════════════════════════════════════════════════════════════════╗[/bold cyan]
-[bold cyan]║[/bold cyan]                                                                   [bold cyan]║[/bold cyan]
-[bold cyan]║[/bold cyan]  [bold bright_cyan]███████╗████████╗███████╗    ███████╗██╗  ██╗ ██████╗ ██████╗[/bold bright_cyan]  [bold cyan]║[/bold cyan]
-[bold cyan]║[/bold cyan]  [bold bright_cyan]██╔════╝╚══██╔══╝██╔════╝    ██╔════╝██║  ██║██╔═══██╗██╔══██╗[/bold bright_cyan] [bold cyan]║[/bold cyan]
-[bold cyan]║[/bold cyan]  [bold bright_cyan]█████╗     ██║   █████╗      ███████╗███████║██║   ██║██████╔╝[/bold bright_cyan] [bold cyan]║[/bold cyan]
-[bold cyan]║[/bold cyan]  [bold bright_cyan]██╔══╝     ██║   ██╔══╝      ╚════██║██╔══██║██║   ██║██╔═══╝[/bold bright_cyan]  [bold cyan]║[/bold cyan]
-[bold cyan]║[/bold cyan]  [bold bright_cyan]██║        ██║   ███████╗    ███████║██║  ██║╚██████╔╝██║[/bold bright_cyan]      [bold cyan]║[/bold cyan]
-[bold cyan]║[/bold cyan]  [bold bright_cyan]╚═╝        ╚═╝   ╚══════╝    ╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝[/bold bright_cyan]      [bold cyan]║[/bold cyan]
-[bold cyan]║[/bold cyan]                                                                   [bold cyan]║[/bold cyan]
-[bold cyan]║[/bold cyan]           [bold green]🤖 AI Employee Real-Time Monitoring Dashboard 📊[/bold green]          [bold cyan]║[/bold cyan]
-[bold cyan]║[/bold cyan]                                                                   [bold cyan]║[/bold cyan]
-[bold cyan]╚═══════════════════════════════════════════════════════════════════╝[/bold cyan]
-""")
-        yield brand_header
+        # Logo section with FTE SHOP branding
+        logo_section = Static(id="logo-section")
+        logo_section.update(f"""
+        [bold {self.LOGO_COLOR}]
+            ███████╗████████╗███████╗    ███████╗██╗  ██╗ ██████╗ ██████╗
+            ██╔════╝╚══██╔══╝██╔════╝    ██╔════╝██║  ██║██╔═══██╗██╔══██╗
+            █████╗     ██║   █████╗      ███████╗███████║██║   ██║██████╔╝
+            ██╔══╝     ██║   ██╔══╝      ╚════██║██╔══██║██║   ██║██╔═══╝
+            ██║        ██║   ███████╗    ███████║██║  ██║╚██████╔╝██║
+            ╚═╝        ╚═╝   ╚══════╝    ╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝
+        [/bold {self.LOGO_COLOR}]
+                        [bold {self.SUB_LOGO_COLOR}] {self.title} [/bold {self.SUB_LOGO_COLOR}]
+        """)
 
-        # Main content container
-        with ScrollableContainer():
-            # Metrics panel
-            self.metrics_panel = MetricsPanel()
-            yield self.metrics_panel
+        yield logo_section
+        # Main grid with 4 info boxes
+        
+        with Container(id="main-grid"):
+            # Box 1: Live Metrics
+            metrics_box = Static(classes="info-box", id="metrics-box")
+            self.metrics_panel = metrics_box
+            yield metrics_box
 
-            # Notification area (initially hidden)
-            self.notification_widget = Static("", id="notification")
-            yield self.notification_widget
+            # Box 2: Pending Approvals
+            approval_box = Static(classes="info-box", id="approval-box")
+            self.approval_panel = approval_box
+            yield approval_box
 
-            # Approval panel
-            self.approval_panel = ApprovalPanel()
-            yield self.approval_panel
+            # Box 3: Channel Activity
+            channel_box = Static(classes="info-box", id="channel-box")
+            self.channel_panel = channel_box
+            yield channel_box
 
-            # Channel activity panel
-            self.channel_panel = ChannelPanel()
-            yield self.channel_panel
-
-            # Activity stream panel
-            self.activity_stream = ActivityStream()
-            yield self.activity_stream
-
-            # Classification analytics panel
-            self.classification_panel = ClassificationPanel()
-            yield self.classification_panel
-
-        # Status bar at bottom
+            # Box 4: Classification
+            classification_box = Static(classes="info-box", id="classification-box")
+            self.classification_panel = classification_box
+            yield classification_box
+        
+        # Hidden widgets for internal use
+        self.activity_stream = ActivityStream()
+        self.notification_widget = Static("", id="notification")
         self.status_bar = StatusBar()
-        yield self.status_bar
 
         yield Footer()
 
