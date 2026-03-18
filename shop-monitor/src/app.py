@@ -1,27 +1,27 @@
 """Main Textual App class for Shop Monitor."""
 
 import logging
-from datetime import datetime
+from datetime import datetime, date
 from pathlib import Path
 from typing import List
 
 from textual.app import App, ComposeResult
-from textual.containers import Container, Vertical, ScrollableContainer
-from textual.widgets import Header, Footer, Static
+from textual.containers import Container, Grid
+from textual.widgets import Footer, Static
+from textual.events import Click
 
 from .config import get_config
 from .services.vault_watcher import VaultWatcher
 from .services.metrics_calculator import MetricsCalculator
 from .services.vault_parser import VaultParser
 from .services.file_manager import FileManager
-from .widgets.metrics_panel import MetricsPanel
-from .widgets.status_bar import StatusBar
-from .widgets.approval_panel import ApprovalPanel
-from .widgets.task_modal import TaskModal
-from .widgets.channel_panel import ChannelPanel
-from .widgets.activity_stream import ActivityStream
-from .widgets.classification_panel import ClassificationPanel
-from .models.pending_task import PendingTask
+from .widgets.date_picker import DatePicker
+from .widgets.metric_tile import MetricTile
+from .widgets.list_modal import ListModal
+from .widgets.detail_modal import DetailModal
+from .widgets.ceo_briefing import CEOBriefing
+from .models.dashboard_metrics import DashboardMetrics
+from .models.order_item import OrderItem
 
 
 logger = logging.getLogger(__name__)
@@ -31,111 +31,112 @@ class ShopMonitorApp(App):
     """Shop Monitor - Real-Time Terminal Dashboard.
 
     Main Textual application class for the Shop Monitor dashboard.
-    Displays live metrics, channel activity, pending approvals, and activity stream.
+    Displays live metrics with date filtering and drill-down capabilities.
     """
 
     LOGO_COLOR = "#FFD700"
     SUB_LOGO_COLOR = "#98FB98"
     LINES_COLOR = "#96DED1"
 
-    CSS = f"""
-    Screen {{
+    CSS = """
+    Screen {
         background: #161616;
-    }}
+    }
 
-    Header {{
-        dock: top;
-        height: 1;
-        background: #161616;
-        color: {LINES_COLOR};
-        content-align: center middle;
-    }}
-
-    Footer {{
+    Footer {
         dock: bottom;
         height: 1;
         background: #161616;
-        color: {LINES_COLOR};
-    }}
+        color: #96DED1;
+    }
 
-    #top-bar {{
-        dock: top;
-        height: 1;
-        background: #161616;
-        color: {LINES_COLOR};
-        border: solid {LINES_COLOR};
-    }}
-
-    #logo-section {{
+    #logo-section {
         height: 14;
         background: #161616;
-        border: heavy {LINES_COLOR};
+        border: heavy #96DED1;
         content-align: center middle;
-    }}
+    }
 
-    #main-grid {{
-        height: 1fr;
+    #main-container {
+        height: auto;
+        layout: horizontal;
+        margin: 0 1 1 1;
+    }
+
+    #left-column {
+        width: 50%;
+        height: auto;
+        padding-right: 1;
+    }
+
+    #metrics-grid {
+        height: auto;
         layout: grid;
         grid-size: 2 2;
-        grid-gutter: 1;
-    }}
-
-    .info-box {{
-        height: 100%;
-        background: #161616;
-        border: heavy {LINES_COLOR};
-        padding: 1;
-        color: white;
-    }}
-
-    .info-box:hover {{
-        border: heavy #96DED1;
-        background: #96DED11A;
-    }}
-
-    .info-box-title {{
-        text-style: bold;
-        color: {LINES_COLOR};
-        text-align: center;
+        grid-gutter: 1 1;
         margin-bottom: 1;
-    }}
+    }
 
-    .info-box-content {{
-        color: white;
-    }}
+    #support-tile {
+        height: auto;
+        width: 100%;
+    }
 
-    .value-big {{
-        text-style: bold;
-        color: #00ff00;
-    }}
+    #right-column {
+        width: 50%;
+        height: auto;
+        border: heavy #96DED1;
+        background: #161616;
+        padding: 1;
+    }
 
-    .label {{
-        color: {LINES_COLOR};
-    }}
-
-    .placeholder {{
-        color: $text-muted;
+    #pending-title {
         text-align: center;
-    }}
+        text-style: bold;
+        color: #96DED1;
+        margin-bottom: 1;
+    }
 
-    .error-notification {{
-        background: red;
+    #pending-list {
+        height: auto;
+    }
+
+    .pending-item {
+        height: 3;
+        background: #161616;
         color: white;
-        text-style: bold;
-        padding: 1;
-        border: solid yellow;
-        margin: 1;
-    }}
+        border-bottom: solid #2a2a2a;
+        padding: 0 1;
+    }
 
-    .success-notification {{
-        background: {LINES_COLOR};
-        color: black;
-        text-style: bold;
+    .pending-item:hover {
+        background: #96DED11A;
+        color: #96DED1;
+    }
+
+    .notification {
+        dock: top;
+        height: 3;
+        background: #161616;
+        border: solid #96DED1;
+        margin: 0 1 1 1;
         padding: 1;
+        text-align: center;
+        color: white;
+    }
+
+    .notification-success {
+        background: #001a00;
         border: solid #00ff00;
-        margin: 1;
-    }}"""
+        color: #00ff00;
+    }
 
+    .notification-error {
+        background: #1a0000;
+        border: solid #ff0000;
+        color: #ff0000;
+    }
+    """
 
     BINDINGS = [
         ("q", "quit", "Quit"),
@@ -156,13 +157,14 @@ class ShopMonitorApp(App):
         self.vault_parser: VaultParser = None
         self.file_manager: FileManager = None
 
-        # Initialize widgets (will be set in compose)
-        self.metrics_panel: MetricsPanel = None
-        self.status_bar: StatusBar = None
-        self.approval_panel: ApprovalPanel = None
-        self.channel_panel: ChannelPanel = None
-        self.activity_stream: ActivityStream = None
-        self.classification_panel: ClassificationPanel = None
+        # Current state
+        self.current_date = date.today()
+        self.current_metrics: DashboardMetrics = None
+
+        # Widget references
+        self.date_picker: DatePicker = None
+        self.tiles = {}
+        self.ceo_briefing: CEOBriefing = None
         self.notification_widget: Static = None
 
     def compose(self) -> ComposeResult:
@@ -184,35 +186,48 @@ class ShopMonitorApp(App):
         [/bold {self.LOGO_COLOR}]
                         [bold {self.SUB_LOGO_COLOR}] {self.title} [/bold {self.SUB_LOGO_COLOR}]
         """)
-
         yield logo_section
-        # Main grid with 4 info boxes
-        
-        with Container(id="main-grid"):
-            # Box 1: Live Metrics
-            metrics_box = Static(classes="info-box", id="metrics-box")
-            self.metrics_panel = metrics_box
-            yield metrics_box
 
-            # Box 2: Pending Approvals
-            approval_box = Static(classes="info-box", id="approval-box")
-            self.approval_panel = approval_box
-            yield approval_box
+        # Date picker
+        self.date_picker = DatePicker(self.current_date)
+        yield self.date_picker
 
-            # Box 3: Channel Activity
-            channel_box = Static(classes="info-box", id="channel-box")
-            self.channel_panel = channel_box
-            yield channel_box
+        # Main container with 2 columns
+        with Container(id="main-container"):
+            # Left column - Metrics
+            with Container(id="left-column"):
+                # 2x2 grid for first 4 metrics
+                with Grid(id="metrics-grid"):
+                    self.tiles["orders"] = MetricTile("orders", "Orders Today", "📦", 0, id="tile-orders")
+                    yield self.tiles["orders"]
 
-            # Box 4: Classification
-            classification_box = Static(classes="info-box", id="classification-box")
-            self.classification_panel = classification_box
-            yield classification_box
-        
-        # Hidden widgets for internal use
-        self.activity_stream = ActivityStream()
-        self.notification_widget = Static("", id="notification")
-        self.status_bar = StatusBar()
+                    self.tiles["sales"] = MetricTile("sales", "Revenue", "💰", 0, id="tile-sales")
+                    yield self.tiles["sales"]
+
+                    self.tiles["inquiries"] = MetricTile("inquiries", "Inquiries", "❓", 0, id="tile-inquiries")
+                    yield self.tiles["inquiries"]
+
+                    self.tiles["refunds"] = MetricTile("refunds", "Refund Requests", "💵", 0, id="tile-refunds")
+                    yield self.tiles["refunds"]
+
+                # Support tile - full width
+                self.tiles["support"] = MetricTile("support", "Support Requests", "🛠️", 0, id="support-tile")
+                yield self.tiles["support"]
+
+            # Right column - Pending Approvals List
+            with Container(id="right-column"):
+                yield Static("⏳ Pending Approvals", id="pending-title")
+
+                # Container for pending items
+                with Container(id="pending-list"):
+                    pass  # Will be populated dynamically
+
+        # CEO Briefing section
+        self.ceo_briefing = CEOBriefing(self.config.vault_path, self.current_date)
+        yield self.ceo_briefing
+
+        # Notification widget (hidden by default)
+        self.notification_widget = Static("", classes="notification")
 
         yield Footer()
 
@@ -230,13 +245,8 @@ class ShopMonitorApp(App):
             # Start vault watcher
             self.vault_watcher.start()
 
-            # Update status bar
-            self.status_bar.set_connected(True)
-            self.status_bar.set_last_update(datetime.now())
-
-            # Initial updates
-            self.update_metrics()
-            self.update_pending_tasks()
+            # Initial metrics update
+            self.update_metrics(self.current_date)
 
             # Start background workers
             self.start_vault_monitor()
@@ -245,13 +255,11 @@ class ShopMonitorApp(App):
 
         except Exception as e:
             logger.error(f"Failed to initialize Shop Monitor: {e}")
-            self.status_bar.set_connected(False)
             self.show_error(f"Initialization failed: {e}")
 
     def start_vault_monitor(self):
         """Start background workers to monitor vault changes."""
-        self.set_interval(0.1, self.check_vault_events)  # Check every 100ms
-        self.set_interval(5.0, self.check_connection)     # Check connection every 5s
+        self.set_interval(1.0, self.check_vault_events)  # Check every second
 
     def check_vault_events(self):
         """Check for vault file system events and update UI."""
@@ -264,165 +272,200 @@ class ShopMonitorApp(App):
             if event:
                 logger.debug(f"Processing vault event: {event['type']} - {event['path'].name}")
 
-                # Add to activity stream
-                if self.activity_stream and 'activity_event' in event:
-                    self.activity_stream.add_event(event['activity_event'])
-
-                # Check if event affects pending tasks
-                if self._is_pending_approval_event(event):
-                    self.update_pending_tasks()
-
                 # Update metrics
-                self.update_metrics()
+                self.update_metrics(self.current_date)
 
-                # Update status bar timestamp
-                self.status_bar.set_last_update(datetime.now())
-
-    def _is_pending_approval_event(self, event: dict) -> bool:
-        """Check if event affects Pending_Approval folder.
+    def update_metrics(self, target_date: date = None):
+        """Calculate and update dashboard metrics for a specific date.
 
         Args:
-            event: Event dictionary
-
-        Returns:
-            True if event is in Pending_Approval folder
+            target_date: Date to calculate metrics for (defaults to current_date)
         """
-        path = event['path']
-        return 'Pending_Approval' in str(path) or \
-               'Approved' in str(path) or \
-               'Rejected' in str(path)
+        if target_date is None:
+            target_date = self.current_date
 
-    def check_connection(self):
-        """Check vault connection status."""
-        if not self.vault_watcher:
-            return
-
-        is_connected = self.vault_watcher.check_connection()
-
-        # Update status bar
-        self.status_bar.set_connected(is_connected)
-
-        # Try to reconnect if disconnected
-        if not is_connected:
-            logger.warning("Vault disconnected, attempting reconnection...")
-            if self.vault_watcher.reconnect():
-                logger.info("Vault reconnected successfully")
-                self.status_bar.set_connected(True)
-                self.update_metrics()
-                self.update_pending_tasks()
-
-    def update_metrics(self):
-        """Calculate and update dashboard metrics."""
         try:
-            # Calculate metrics
-            metrics = self.metrics_calculator.calculate_metrics()
+            # Calculate metrics for the target date
+            metrics = self.metrics_calculator.calculate_metrics(target_date)
+            self.current_metrics = metrics
 
-            # Update metrics panel
-            if self.metrics_panel:
-                self.metrics_panel.set_metrics(metrics)
+            # Update all metric tiles
+            self.tiles["orders"].set_value(metrics.total_orders)
+            self.tiles["sales"].set_value(metrics.total_revenue)
+            self.tiles["inquiries"].set_value(metrics.inquiries_count)
+            self.tiles["refunds"].set_value(metrics.refunds_count)
+            self.tiles["support"].set_value(metrics.support_count)
 
-            # Update channel panel
-            if self.channel_panel:
-                self.channel_panel.set_metrics(metrics)
+            # Update pending approvals list
+            self.update_pending_list(metrics.pending_list)
 
-            # Update classification panel
-            if self.classification_panel:
-                self.classification_panel.set_metrics(metrics)
-
-            logger.debug(f"Metrics updated: {metrics.total_orders} orders, "
-                        f"{metrics.pending_count} pending tasks")
+            logger.debug(f"Metrics updated for {target_date}: {metrics.total_orders} orders, "
+                        f"${metrics.total_revenue:.2f} revenue, {metrics.pending_count} pending")
 
         except Exception as e:
             logger.error(f"Error updating metrics: {e}")
+            self.show_error(f"Failed to update metrics: {e}")
 
-    def update_pending_tasks(self):
-        """Load and update pending tasks list."""
-        try:
-            tasks = self.load_pending_tasks()
-
-            # Update approval panel
-            if self.approval_panel:
-                self.approval_panel.set_tasks(tasks)
-
-            logger.debug(f"Loaded {len(tasks)} pending tasks")
-
-        except Exception as e:
-            logger.error(f"Error updating pending tasks: {e}")
-
-    def load_pending_tasks(self) -> List[PendingTask]:
-        """Load pending tasks from Pending_Approval folder.
-
-        Returns:
-            List of PendingTask objects
-        """
-        tasks = []
-        pending_dir = self.config.vault_path / "Pending_Approval"
-
-        if not pending_dir.exists():
-            logger.warning(f"Pending_Approval directory not found: {pending_dir}")
-            return tasks
-
-        # Scan for markdown files
-        for file_path in pending_dir.glob("*.md"):
-            result = self.vault_parser.parse_file(file_path)
-            if not result:
-                continue
-
-            frontmatter, content = result
-
-            # Create PendingTask
-            task = PendingTask.from_file(file_path, frontmatter, content)
-            tasks.append(task)
-
-        # Sort by priority and creation time
-        tasks.sort(key=lambda t: (t.priority != "high", t.creation_timestamp), reverse=True)
-
-        return tasks
-
-    def on_approval_panel_task_selected(self, message: ApprovalPanel.TaskSelected) -> None:
-        """Handle task selection in approval panel.
+    def on_date_picker_date_changed(self, message: DatePicker.DateChanged) -> None:
+        """Handle date change from date picker.
 
         Args:
-            message: Task selection message
+            message: DateChanged message with new date
         """
-        logger.info(f"Task selected: {message.task.task_id}")
+        logger.info(f"Date changed to: {message.new_date}")
+        self.current_date = message.new_date
 
-        # Open task modal
-        self.push_screen(TaskModal(message.task))
+        # Update metrics for new date
+        self.update_metrics(message.new_date)
 
-    def on_task_modal_approve(self, message: TaskModal.Approve) -> None:
-        """Handle task approval from modal.
+        # Update CEO briefing for new date
+        if self.ceo_briefing:
+            self.ceo_briefing.set_date(message.new_date)
+
+    def update_pending_list(self, pending_items: List[OrderItem]):
+        """Update the pending approvals list.
 
         Args:
-            message: Approve message
+            pending_items: List of OrderItem objects for pending approvals
         """
-        logger.info(f"Approving task: {message.task.task_id}")
+        # Get the pending list container
+        pending_container = self.query_one("#pending-list", Container)
+
+        # Clear existing items
+        pending_container.remove_children()
+
+        # Add pending items
+        for item in pending_items:
+            # Format: Order # | Customer | Amount
+            item_text = f"[bold #FFD700]{item.order_number}[/bold #FFD700] | {item.customer_name} | [bold #98FB98]${item.amount:.2f}[/bold #98FB98]"
+            item_widget = Static(item_text, classes="pending-item")
+            item_widget.item_data = item  # Store reference to the item
+            pending_container.mount(item_widget)
+
+        logger.debug(f"Updated pending list with {len(pending_items)} items")
+
+    def on_click(self, event: Click) -> None:
+        """Handle clicks on widgets (pending items).
+
+        Args:
+            event: Click event
+        """
+        # Check if clicked widget is a pending item
+        if hasattr(event.widget, "classes") and "pending-item" in event.widget.classes:
+            if hasattr(event.widget, "item_data"):
+                item = event.widget.item_data
+                logger.info(f"Pending item clicked: {item.order_number}")
+                # Show detail modal with approve/reject options
+                self.push_screen(DetailModal(item, show_actions=True))
+
+    def on_metric_tile_tile_clicked(self, message: MetricTile.TileClicked) -> None:
+        """Handle metric tile click.
+
+        Args:
+            message: TileClicked message with metric type and value
+        """
+        logger.info(f"Metric tile clicked: {message.metric_type}")
+
+        if not self.current_metrics:
+            return
+
+        # Get the appropriate list based on metric type
+        items = []
+        title = ""
+
+        if message.metric_type == "orders":
+            items = self.current_metrics.orders_list
+            title = f"Orders - {self.current_date}"
+        elif message.metric_type == "sales":
+            items = self.current_metrics.orders_list
+            title = f"Sales - {self.current_date}"
+        elif message.metric_type == "inquiries":
+            items = self.current_metrics.inquiries_list
+            title = f"Inquiries - {self.current_date}"
+        elif message.metric_type == "refunds":
+            items = self.current_metrics.refunds_list
+            title = f"Refund Requests - {self.current_date}"
+        elif message.metric_type == "support":
+            items = self.current_metrics.support_list
+            title = f"Support Requests - {self.current_date}"
+        elif message.metric_type == "pending":
+            items = self.current_metrics.pending_list
+            title = f"Pending Approvals"
+
+        # Show list modal
+        self.push_screen(ListModal(title, items))
+
+    def on_list_modal_item_selected(self, message: ListModal.ItemSelected) -> None:
+        """Handle item selection from list modal.
+
+        Args:
+            message: ItemSelected message with selected item
+        """
+        logger.info(f"Item selected: {message.item.order_number}")
+
+        # Show detail modal without approve/reject actions
+        # (pending items are handled separately in the right column)
+        self.push_screen(DetailModal(message.item, show_actions=False))
+
+    def on_detail_modal_approve(self, message: DetailModal.Approve) -> None:
+        """Handle item approval from detail modal.
+
+        Args:
+            message: Approve message with item
+        """
+        logger.info(f"Approving item: {message.item.order_number}")
 
         # Move file to Approved folder
-        success, error = self.file_manager.approve_task(message.task.file_path)
+        success, error = self.file_manager.approve_task(message.item.file_path)
 
         if success:
-            self.show_success(f"Task {message.task.task_id} approved")
-            # Update will happen automatically via vault watcher
+            self.show_success(f"Approved: {message.item.order_number}")
+            # Update metrics immediately to refresh pending list
+            self.update_metrics(self.current_date)
         else:
-            self.show_error(f"Failed to approve task: {error}")
+            self.show_error(f"Failed to approve: {error}")
 
-    def on_task_modal_reject(self, message: TaskModal.Reject) -> None:
-        """Handle task rejection from modal.
+    def on_detail_modal_reject(self, message: DetailModal.Reject) -> None:
+        """Handle item rejection from detail modal.
 
         Args:
-            message: Reject message
+            message: Reject message with item
         """
-        logger.info(f"Rejecting task: {message.task.task_id}")
+        logger.info(f"Rejecting item: {message.item.order_number}")
 
         # Move file to Rejected folder
-        success, error = self.file_manager.reject_task(message.task.file_path)
+        success, error = self.file_manager.reject_task(message.item.file_path)
 
         if success:
-            self.show_success(f"Task {message.task.task_id} rejected")
-            # Update will happen automatically via vault watcher
+            self.show_success(f"Rejected: {message.item.order_number}")
+            # Update metrics immediately to refresh pending list
+            self.update_metrics(self.current_date)
         else:
-            self.show_error(f"Failed to reject task: {error}")
+            self.show_error(f"Failed to reject: {error}")
+
+    def on_ceo_briefing_briefing_clicked(self, message: CEOBriefing.BriefingClicked) -> None:
+        """Handle CEO briefing click.
+
+        Args:
+            message: BriefingClicked message with briefing content
+        """
+        logger.info("CEO briefing clicked")
+
+        # Create a dummy OrderItem for displaying briefing in detail modal
+        from .models.order_item import OrderItem
+        briefing_item = OrderItem(
+            order_number="CEO Briefing",
+            customer_name="Executive Summary",
+            amount=0.0,
+            item_type="Report",
+            status="Available",
+            timestamp=datetime.now(),
+            file_path=Path(""),
+            full_content=message.briefing_content
+        )
+
+        # Show in detail modal (no actions)
+        self.push_screen(DetailModal(briefing_item, show_actions=False))
 
     def show_error(self, message: str):
         """Display error notification.
@@ -431,14 +474,7 @@ class ShopMonitorApp(App):
             message: Error message to display
         """
         logger.error(f"Error notification: {message}")
-
-        if self.notification_widget:
-            self.notification_widget.update(f"[bold red]✗ Error:[/bold red] {message}")
-            self.notification_widget.add_class("error-notification")
-            self.notification_widget.remove_class("success-notification")
-
-            # Clear notification after 5 seconds
-            self.set_timer(5.0, self.clear_notification)
+        # For now, just log (notifications can be enhanced later)
 
     def show_success(self, message: str):
         """Display success notification.
@@ -447,21 +483,7 @@ class ShopMonitorApp(App):
             message: Success message to display
         """
         logger.info(f"Success notification: {message}")
-
-        if self.notification_widget:
-            self.notification_widget.update(f"[bold green]✓ Success:[/bold green] {message}")
-            self.notification_widget.add_class("success-notification")
-            self.notification_widget.remove_class("error-notification")
-
-            # Clear notification after 3 seconds
-            self.set_timer(3.0, self.clear_notification)
-
-    def clear_notification(self):
-        """Clear notification display."""
-        if self.notification_widget:
-            self.notification_widget.update("")
-            self.notification_widget.remove_class("error-notification")
-            self.notification_widget.remove_class("success-notification")
+        # For now, just log (notifications can be enhanced later)
 
     def on_unmount(self) -> None:
         """Handle app unmount event."""

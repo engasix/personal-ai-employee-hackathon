@@ -1,6 +1,6 @@
 # Dashboard
 
-> Last Updated: 2026-01-14 | Auto-refreshed by AI Employee
+> Last Updated: 2026-01-20 | Auto-refreshed by AI Employee
 
 ---
 
@@ -8,11 +8,11 @@
 
 |Metric|Value|
 |---|---|
-|Date|2026-01-14|
+|Date|2026-01-20|
 |Orders Today|0|
 |Revenue Today|$0|
 |Pending Tasks|0|
-|Awaiting Approval|0|
+|Awaiting Approval|1|
 
 ---
 
@@ -21,8 +21,9 @@
 |Channel|Messages|Orders|Inquiries|Support|Refunds|
 |---|---|---|---|---|---|
 |Website|0|0|-|-|-|
-|Gmail|0|-|0|0|0|
+|Gmail|1|-|0|0|0|
 |WhatsApp|0|-|0|0|0|
+|LinkedIn|2 (notifications)|-|-|-|-|
 
 ---
 
@@ -54,9 +55,9 @@
 |Folder|Count|
 |---|---|
 |/Needs_Action|0|
-|/Pending_Approval|0|
+|/Pending_Approval|1|
 |/Approved|0|
-|/Done (Today)|0|
+|/Done (Today)|2|
 
 ---
 
@@ -64,7 +65,8 @@
 
 |Time|Channel|Type|Action|Status|
 |---|---|---|---|---|
-|--|--|--|No activity yet|--|
+|17:19|LinkedIn|Notification|Message notification received|Processed & Archived|
+|21:58|LinkedIn|Notification|Message notification received|Flagged for review|
 
 ---
 
@@ -72,7 +74,7 @@
 
 |Item|Type|Amount|Created|Action|
 |---|---|---|---|---|
-|--|No pending approvals|--|--|--|
+|INFO_LinkedInMessage_19bcd55c|LinkedIn notification|N/A|2026-01-19|Check LinkedIn message|
 
 ---
 
