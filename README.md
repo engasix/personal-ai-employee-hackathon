@@ -6,6 +6,14 @@ A local-first autonomous AI agent that manages personal and business affairs 24/
 
 Building a "Digital FTE" (Full-Time Equivalent) — an AI employee that proactively runs **FTE Shop**, an online store selling AI agents and automation solutions.
 
+---
+
+## Demo
+
+[![Personal AI Employee Hackathon](https://img.youtube.com/vi/te5fkBc7bZ4/maxresdefault.jpg)](https://www.youtube.com/watch?v=te5fkBc7bZ4)
+
+---
+
 ## Tech Stack
 
 |Component|Purpose|
